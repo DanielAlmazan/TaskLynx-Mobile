@@ -1,4 +1,4 @@
-package edu.tasklynx.tasklynxmobile
+package edu.tasklynx.tasklynxmobile.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

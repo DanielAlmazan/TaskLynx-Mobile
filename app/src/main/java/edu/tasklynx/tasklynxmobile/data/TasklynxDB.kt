@@ -6,9 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RoomDatabase
+import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
-@Database (entities = [Trabajo::class], version = 1)
+@Database(entities = [Trabajo::class, Trabajador::class], version = 1)
 abstract class tasklynxDB: RoomDatabase() {
     abstract fun trabajoDao(): TrabajoDao
 }

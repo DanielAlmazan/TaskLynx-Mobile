@@ -2,6 +2,7 @@ package edu.tasklynx.tasklynxmobile.models
 
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "trabajador")
@@ -16,6 +17,7 @@ data class Trabajador(
     val email: String,
     @SerializedName("especialidad")
     val especialidad: String,
+    @PrimaryKey
     @SerializedName("idTrabajador")
     val idTrabajador: String,
     @SerializedName("nombre")

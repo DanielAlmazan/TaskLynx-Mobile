@@ -1,3 +1,8 @@
 <resources>
 	<string name="app_name">TaskLynx Mobile</string>
+	<string name="txt_logo">TaskLynx Mobile Logo</string>
+	<string name="txt_login_title">Login</string>
+	<string name="txt_email_field">email</string>
+	<string name="txt_password_field">password</string>
+	<string name="txt_send_credentials">password</string>
 </resources>

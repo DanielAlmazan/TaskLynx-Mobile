@@ -14,7 +14,7 @@ class Repository(db: tasklynxDB, val ds: RemoteDataSource) {
         return ds.getEmployeeByEmailAndPass(email, pass)
     }
 
-    suspend fun fetchPendingTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
+    fun fetchPendingTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
         return flow {
             var resultApi = emptyList<Trabajo>()
 
@@ -28,7 +28,7 @@ class Repository(db: tasklynxDB, val ds: RemoteDataSource) {
         }
     }
 
-    suspend fun fetchCompletedTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
+    fun fetchCompletedTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
         return flow {
             var resultApi = emptyList<Trabajo>()
 
@@ -42,7 +42,7 @@ class Repository(db: tasklynxDB, val ds: RemoteDataSource) {
         }
     }
 
-    suspend fun fetchPendingTasksByEmployeeIdOrderedByPriority(id: String): Flow<List<Trabajo>> {
+    fun fetchPendingTasksByEmployeeIdOrderedByPriority(id: String): Flow<List<Trabajo>> {
         return flow {
             var resultApi = emptyList<Trabajo>()
 

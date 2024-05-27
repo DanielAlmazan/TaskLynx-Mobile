@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import edu.tasklynx.tasklynxmobile.databinding.ActivitySplashScreenBinding
+import edu.tasklynx.tasklynxmobile.ui.main.MainActivity
 
 class SplashScreenActivity : AppCompatActivity() {
 	private lateinit var binding: ActivitySplashScreenBinding

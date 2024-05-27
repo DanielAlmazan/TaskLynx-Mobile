@@ -8,18 +8,14 @@ import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 import kotlinx.coroutines.launch
 
-class MainViewModel (val repository: Repository, trabajador: Trabajador): ViewModel() {
-    private var _currentPendingTasks = repository.fetchPendingTasksByEmployeeId(trabajador.idTrabajador)
+class MainViewModel (val repository: Repository, employeeId: String): ViewModel() {
+    private var _currentPendingTasks = repository.fetchPendingTasksByEmployeeId(employeeId)
         val currentPendingTasks
             get() = _currentPendingTasks
 
-    private var _currentCompletedTasks = repository.fetchCompletedTasksByEmployeeId(trabajador.idTrabajador)
+    private var _currentCompletedTasks = repository.fetchCompletedTasksByEmployeeId(employeeId)
         val currentCompletedTasks
             get() = _currentCompletedTasks
-
-    private var _currentPendingTasksOrderedByPriority = repository.fetchPendingTasksByEmployeeIdOrderedByPriority(trabajador.idTrabajador)
-        val currentPendingTasksOrderedByPriority
-            get() = _currentPendingTasksOrderedByPriority
 
     fun finishTask(trabajo: Trabajo) = viewModelScope.launch {
         repository.finishTask(trabajo.codTrabajo)
@@ -29,9 +25,12 @@ class MainViewModel (val repository: Repository, trabajador: Trabajador): ViewMo
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
     private val repository: Repository,
-    private val trabajador: Trabajador
+    private val employeeId: String
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(repository, trabajador) as T
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(repository, employeeId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

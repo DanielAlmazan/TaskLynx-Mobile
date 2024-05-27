@@ -28,7 +28,7 @@ data class Trabajo(
     @SerializedName("fecIni")
     val fecIni: String,
     @SerializedName("idTrabajador")
-    val idTrabajador: String,
+    val idTrabajador: Trabajador,
     @SerializedName("prioridad")
     val prioridad: Int,
     @SerializedName("tiempo")

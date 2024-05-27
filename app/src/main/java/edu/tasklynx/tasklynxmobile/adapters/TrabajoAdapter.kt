@@ -7,24 +7,34 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import edu.tasklynx.tasklynxmobile.databinding.TrabajoDetailBinding
+import edu.tasklynx.tasklynxmobile.databinding.TrabajoItemBinding
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
 class TrabajoAdapter (
-    val onClickTrabajo: (idTask: Int) -> Unit,
-): ListAdapter<Trabajo, TrabajoAdapter.TrabajoViewHolder>(ShowsDiffCallback()) {
+    val onClickTrabajo: (idTask: String) -> Unit,
+): ListAdapter<Trabajo, TrabajoAdapter.TrabajoViewHolder>(TrabajoDiffCallback()) {
 
     inner class TrabajoViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val bind = TrabajoDetailBinding.bind(view)
+        val binding = TrabajoItemBinding.bind(view)
 
         fun bind (trabajo: Trabajo) {
-            // Bindeo de datos al ViewHolder de trabajo
-        }
+            binding.tvTaskID.text = trabajo.codTrabajo
+            binding.tvSpeciality.text = trabajo.categoria
+            binding.tvDescription.text = trabajo.descripcion
+            binding.tvStartingDate.text = trabajo.fecIni
+            binding.tvEndingDate.text = trabajo.fecFin
+            binding.tvPriority.text = trabajo.prioridad.toString()
+            binding.tvTime.text = trabajo.tiempo.toString()
 
+            binding.root.setOnClickListener {
+                onClickTrabajo(trabajo.codTrabajo)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrabajoViewHolder {
         return TrabajoViewHolder(
-            TrabajoDetailBinding.inflate(
+            TrabajoItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -39,7 +49,7 @@ class TrabajoAdapter (
 
 }
 
-class ShowsDiffCallback: DiffUtil.ItemCallback<Trabajo>() {
+class TrabajoDiffCallback: DiffUtil.ItemCallback<Trabajo>() {
     override fun areItemsTheSame(oldItem: Trabajo, newItem: Trabajo): Boolean {
         return oldItem.codTrabajo == newItem.codTrabajo
     }

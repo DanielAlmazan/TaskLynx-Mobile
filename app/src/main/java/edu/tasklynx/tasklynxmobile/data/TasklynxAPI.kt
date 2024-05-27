@@ -1,5 +1,6 @@
 package edu.tasklynx.tasklynxmobile.data
 
+import TrabajoResponse
 import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 import retrofit2.Retrofit
@@ -10,7 +11,7 @@ import retrofit2.http.Path
 
 class TasklynxAPI {
     companion object {
-        const val BASE_URL = "http://localhost:8080/api/"
+        const val BASE_URL = "http://10.0.2.2:8080/api/"
 
         fun getRetrofit2Api(): TasklinkAPIInterface {
             return Retrofit.Builder().baseUrl(BASE_URL)
@@ -22,25 +23,13 @@ class TasklynxAPI {
     interface TasklinkAPIInterface {
         // Métodos
 
-        // Get an employee by email and password
-        @GET("trabajadores/{email}/{pass}")
-        suspend fun getEmployeeByEmailAndPass(@Path("email") email: String, @Path("pass") pass: String): Trabajador
-
         // Get pending jobs for an employee by his id
         @GET("trabajadores/{id}/trabajos/pendientes")
-        suspend fun getPendingJobsByEmployeeId(@Path("id") id: String): List<Trabajo>
+        suspend fun getPendingJobsByEmployeeId(@Path("id") id: String): TrabajoResponse
 
         // Get completed jobs
         @GET("trabajadores/{id}/trabajos/completados")
-        suspend fun getCompletedJobsByEmployeeId(@Path("id") id: String): List<Trabajo>
-
-        // Get pending jobs for an specific employee ordered by priority
-        @GET("trabajadores/{id}/trabajos/pendientes/prioridad")
-        suspend fun getPendingJobsOrderedByPriority(@Path("id") id: String): List<Trabajo>
-
-        // Get pending jobs for an specific by priority indicated by the user
-        @GET("trabajadores/{id}/trabajos/pendientes/{prioridad}")
-        suspend fun getPendingJobsByPriority(@Path("id") id: String, @Path("prioridad") prioridad: Int): List<Trabajo>
+        suspend fun getCompletedJobsByEmployeeId(@Path("id") id: String): TrabajoResponse
 
         @PUT("trabajos/finalizar/{id}")
         fun finishTask(@Path("id") id: String)

@@ -3,6 +3,12 @@
 	<string name="txt_logo">TaskLynx Mobile Logo</string>
 	<string name="txt_login_title">Login</string>
 	<string name="txt_email_field">email</string>
+	<string name="txt_id_field">ID</string>
 	<string name="txt_password_field">password</string>
 	<string name="txt_send_credentials">password</string>
+	<string name="txt_optBottom_pendingTasks">Pending tasks</string>
+	<string name="txt_optBottom_completedTAsks">Completed tasks</string>
+	<string name="txt_optTop_sort">Sort tasks by priority</string>
+	<string name="txt_optTop_filter">Filter tasks by speciality</string>
+	<string name="txt_noConnection">There is no internet connection</string>
 </resources>

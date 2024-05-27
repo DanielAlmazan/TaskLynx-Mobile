@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.opSpeciality -> {
                     adapter.submitList(emptyList())
-                    getTasksBySpeciality()
+                    getTaskFilteredByPriority()
                     true
                 }
 
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getTasksBySpeciality() {
+    private fun getTaskFilteredByPriority() {
         if (checkConnection(this)) {
             lifecycleScope.launch {
                 // TODO Implement the logic to filter the tasks by speciality

@@ -12,6 +12,7 @@ import retrofit2.http.Path
 class TasklynxAPI {
     companion object {
         const val BASE_URL = "http://10.0.2.2:8080/api/"
+        // No toqueis la url, es la que se usa para el emulador de android studio
 
         fun getRetrofit2Api(): TasklinkAPIInterface {
             return Retrofit.Builder().baseUrl(BASE_URL)
@@ -21,8 +22,6 @@ class TasklynxAPI {
     }
 
     interface TasklinkAPIInterface {
-        // Métodos
-
         // Get pending jobs for an employee by his id
         @GET("trabajadores/{id}/trabajos/pendientes")
         suspend fun getPendingJobsByEmployeeId(@Path("id") id: String): TrabajoResponse

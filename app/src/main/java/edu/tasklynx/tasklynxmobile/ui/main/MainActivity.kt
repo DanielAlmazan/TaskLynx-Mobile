@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter = TrabajoAdapter(
             onClickTrabajo = { trabajo ->
-                // Show the task details
+                // TODO Implement the logic to show the task details
             }
         )
 
@@ -162,10 +162,12 @@ class MainActivity : AppCompatActivity() {
     private fun getTaskFilteredByPriority() {
         if (checkConnection(this)) {
             lifecycleScope.launch {
-                // TODO Implement the logic to filter the tasks by speciality
+                // TODO Implement the logic to filter the tasks by a specified priority
             }
         } else {
             Toast.makeText(this, getString(R.string.txt_noConnection), Toast.LENGTH_SHORT).show()
         }
     }
+
+    //TODO Implement a button in task details to finish the task and insert that task in the local database
 }

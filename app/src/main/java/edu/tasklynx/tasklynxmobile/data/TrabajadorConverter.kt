@@ -6,6 +6,9 @@ import edu.tasklynx.tasklynxmobile.models.Trabajador
 
 class TrabajadorConverter {
 
+    // Esta clase se usa para convertir el objeto trabajador en un string, y viceversa
+    // Necesario para poder almacenar el objeto trabajador en la base de datos
+
     private val gson = Gson()
 
     @TypeConverter

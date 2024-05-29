@@ -2,16 +2,19 @@ package edu.tasklynx.tasklynxmobile.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import edu.tasklynx.tasklynxmobile.R
 import edu.tasklynx.tasklynxmobile.TaskLynxApplication
 import edu.tasklynx.tasklynxmobile.adapters.TrabajoAdapter
-import edu.tasklynx.tasklynxmobile.data.RemoteDataSource
+import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.data.Repository
 import edu.tasklynx.tasklynxmobile.databinding.ActivityMainBinding
+import edu.tasklynx.tasklynxmobile.ui.trabajo.TrabajoDetailActivity
 import edu.tasklynx.tasklynxmobile.utils.checkConnection
 import kotlinx.coroutines.launch
 
@@ -23,11 +26,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var employeeId: String
     private lateinit var adapter: TrabajoAdapter
+    private var priority: Int = 0
 
     private val vm: MainViewModel by viewModels {
         val db = (application as TaskLynxApplication).tasksDB
-        val ds = RemoteDataSource()
-        MainViewModelFactory(Repository(db, ds), employeeId)
+        val ds = TaskLynxDataSource(db.trabajoDao())
+        MainViewModelFactory(Repository(ds), employeeId, priority)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +46,9 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        Log.d("MainActivity", "Current employee: $employeeId")
-
         adapter = TrabajoAdapter(
-            onClickTrabajo = { trabajo ->
-                // TODO Implement the logic to show the task details
+            onClickTrabajo = { idTask, adapterPosition ->
+                TrabajoDetailActivity.navigate(this@MainActivity, idTask)
             }
         )
 
@@ -78,6 +80,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.opSpeciality -> {
                     adapter.submitList(emptyList())
                     getTaskFilteredByPriority()
+                    //TODO ¿Manejar también el botón para eliminar el filtro?
+                    // Igualmente, al clickar en "Pending tasks" en la bottom navigation, se elimina el filtro de todas maneras.
                     true
                 }
 
@@ -114,16 +118,16 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         getAndSortCompletedTasks()
                     }
-                }
-
-                else -> {
                     binding.swipeRefresh.isRefreshing = false
+                } else -> {
+                    Toast.makeText(this, getString(R.string.txt_noConnection), Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun getAndSortPendingTasks() {
+        //TODO Aplicar un color a cada tarea según la prioridad
         if (checkConnection(this)) {
             lifecycleScope.launch {
                 vm.currentPendingTasks.collect { tasks ->
@@ -162,12 +166,39 @@ class MainActivity : AppCompatActivity() {
     private fun getTaskFilteredByPriority() {
         if (checkConnection(this)) {
             lifecycleScope.launch {
-                // TODO Implement the logic to filter the tasks by a specified priority
+
+                val dialogView = EditText(this@MainActivity)
+
+                val dialog = AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Insert the priority to filter the tasks")
+                    .setView(dialogView)
+                    .setPositiveButton("OK") { dialog, _ ->
+                        val priorityToFilter = dialogView.text.toString().toInt()
+                        dialog.dismiss()
+                        priority = priorityToFilter
+
+                        adapter.submitList(emptyList())
+
+                        lifecycleScope.launch {
+                            vm.filterTasksByPriority(employeeId, priorityToFilter)
+                            vm.currentPendingTasksFilteredByPriority.value?.collect { tasks ->
+                                adapter.submitList(tasks)
+                            }
+                        }
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+
+                dialog.show()
             }
         } else {
             Toast.makeText(this, getString(R.string.txt_noConnection), Toast.LENGTH_SHORT).show()
         }
     }
 
-    //TODO Implement a button in task details to finish the task and insert that task in the local database
+    private fun logout() {
+        // TODO Implementar lógica para cerrar sesión
+    }
 }

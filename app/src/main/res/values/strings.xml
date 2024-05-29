@@ -11,4 +11,5 @@
 	<string name="txt_optTop_sort">Sort tasks by priority</string>
 	<string name="txt_optTop_filter">Filter tasks by speciality</string>
 	<string name="txt_noConnection">There is no internet connection</string>
+    <string name="txt_finish_task">Finish task</string>
 </resources>

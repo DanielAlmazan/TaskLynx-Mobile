@@ -8,21 +8,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewModelScope
 import edu.tasklynx.tasklynxmobile.TaskLynxApplication
-import edu.tasklynx.tasklynxmobile.data.RemoteDataSource
+import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.data.Repository
 import edu.tasklynx.tasklynxmobile.databinding.ActivityLoginBinding
-import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.ui.main.MainActivity
 import kotlinx.coroutines.launch
 
 class LoginActivity: AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-
-    private val vm: LoginViewModel by viewModels {
-        val db = (application as TaskLynxApplication).tasksDB
-        val ds = RemoteDataSource()
-        LoginViewModelFactory(Repository(db, ds))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +26,7 @@ class LoginActivity: AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.button.setOnClickListener {
-            vm.viewModelScope.launch {
-                login()
-            }
+            login()
         }
     }
 

@@ -11,7 +11,7 @@ import edu.tasklynx.tasklynxmobile.databinding.TrabajoItemBinding
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
 class TrabajoAdapter (
-    val onClickTrabajo: (idTask: String) -> Unit,
+    val onClickTrabajo: (idTask: String, position: Int) -> Unit,
 ): ListAdapter<Trabajo, TrabajoAdapter.TrabajoViewHolder>(TrabajoDiffCallback()) {
 
     inner class TrabajoViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -19,15 +19,13 @@ class TrabajoAdapter (
 
         fun bind (trabajo: Trabajo) {
             binding.tvTaskID.text = trabajo.codTrabajo
-            binding.tvSpeciality.text = trabajo.categoria
             binding.tvDescription.text = trabajo.descripcion
             binding.tvStartingDate.text = trabajo.fecIni
             binding.tvEndingDate.text = trabajo.fecFin
             binding.tvPriority.text = trabajo.prioridad.toString()
-            binding.tvTime.text = trabajo.tiempo.toString()
 
             binding.root.setOnClickListener {
-                onClickTrabajo(trabajo.codTrabajo)
+                onClickTrabajo(trabajo.codTrabajo, adapterPosition)
             }
         }
     }

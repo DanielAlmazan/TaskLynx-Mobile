@@ -1,6 +1,6 @@
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
-data class TrabajoResponse(
-    val result: List<Trabajo>,
+data class TrabajoSingleResponse(
+    val result: Trabajo,
     val error: Boolean
 )

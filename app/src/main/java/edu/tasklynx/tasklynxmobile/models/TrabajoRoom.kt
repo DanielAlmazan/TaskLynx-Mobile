@@ -1,19 +1,24 @@
 package edu.tasklynx.tasklynxmobile.models
 
-
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class Trabajo(
+@Entity(tableName = "trabajo",
+    foreignKeys = [
+        ForeignKey(
+            entity = Trabajador::class,
+            parentColumns = ["idTrabajador"],
+            childColumns = ["idTrabajador"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ])
+data class TrabajoRoom(
     @SerializedName("categoria")
     val categoria: String,
     @SerializedName("codTrabajo")
-    val codTrabajo: String,
+    @PrimaryKey val codTrabajo: String,
     @SerializedName("descripcion")
     val descripcion: String,
     @SerializedName("fecFin")
@@ -21,9 +26,9 @@ data class Trabajo(
     @SerializedName("fecIni")
     val fecIni: String,
     @SerializedName("idTrabajador")
-    val idTrabajador: Trabajador?,
+    val idTrabajador: String?,
     @SerializedName("prioridad")
     val prioridad: Int,
     @SerializedName("tiempo")
     var tiempo: Double?
-) : Parcelable
+)

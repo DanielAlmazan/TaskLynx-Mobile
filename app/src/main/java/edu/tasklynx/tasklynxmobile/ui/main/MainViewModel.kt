@@ -15,7 +15,7 @@ class MainViewModel(
     val currentPendingTasks
         get() = _currentPendingTasks
 
-    private var _currentCompletedTasks = repository.fetchTasksfromDB()
+    private var _currentCompletedTasks = repository.fetchTasksFromDB()
     val currentCompletedTasks
         get() = _currentCompletedTasks
 }

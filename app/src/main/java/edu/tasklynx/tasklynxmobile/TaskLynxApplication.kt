@@ -2,11 +2,11 @@ package edu.tasklynx.tasklynxmobile
 
 import android.app.Application
 import androidx.room.Room
-import edu.tasklynx.tasklynxmobile.data.tasklynxDB
+import edu.tasklynx.tasklynxmobile.data.TasklynxDB
 import edu.tasklynx.tasklynxmobile.utils.Preferences
 
 class TaskLynxApplication: Application() {
-    lateinit var tasksDB: tasklynxDB
+    lateinit var tasksDB: TasklynxDB
         private set
 
     companion object {
@@ -21,7 +21,7 @@ class TaskLynxApplication: Application() {
 
         tasksDB = Room.databaseBuilder(
             this,
-            tasklynxDB::class.java,
+            TasklynxDB::class.java,
             "tasks"
         ).build()
     }

@@ -3,32 +3,59 @@ package edu.tasklynx.tasklynxmobile.ui.trabajo
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import edu.tasklynx.tasklynxmobile.data.Repository
+import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
+import edu.tasklynx.tasklynxmobile.models.TrabajoRoom
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
-class TrabajoDetailViewModel (
-    val repository: Repository, idTrabajo: String
-): ViewModel() {
-//    private val _trabajo = repository.fetchTaskById(idTrabajo)
-//    val trabajo
-//        get() = _trabajo
+class TrabajoDetailViewModel(
+    private val repository: Repository
+) : ViewModel() {
+    private val TAG = TrabajoDetailViewModel::class.java.simpleName
+    fun finishTask(id: String, finishDate: String, timeSpent: Double) = runBlocking {
+        var task: Trabajo? = null
+        repository.finishTask(id, finishDate, timeSpent).catch {
+            Log.e(TAG, it.message ?: "Error finishing task")
+        }.collect {
+            task = it
+        }
 
-    fun finishTask(id: String, finishDate: String, timeSpent: Int) {
-        repository.finishTask(id, finishDate, timeSpent)
-        Log.d("TrabajoDetailViewModel", "Finishing task with ID: $id")
+        return@runBlocking task
     }
 
-    suspend fun insertTask(trabajo: Trabajo) {
-        repository.insertTask(trabajo)
+    fun insertTask(task: Trabajo) {
+        val taskRoom = TrabajoRoom(
+            task.categoria,
+            task.codTrabajo,
+            task.descripcion,
+            task.fecFin,
+            task.fecIni,
+            task.idTrabajador?.idTrabajador,
+            task.prioridad,
+            task.tiempo
+        )
+
+        viewModelScope.launch {
+            repository.insertTask(taskRoom)
+        }
+    }
+
+    fun insertEmployee(employee: Trabajador) {
+        viewModelScope.launch {
+            repository.insertEmployee(employee)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
     class TrabajoDetailViewModelFactory(
-        private val repository: Repository,
-        private val idTrabajo: String
+        private val repository: Repository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return TrabajoDetailViewModel(repository, idTrabajo) as T
+            return TrabajoDetailViewModel(repository) as T
         }
     }
 }

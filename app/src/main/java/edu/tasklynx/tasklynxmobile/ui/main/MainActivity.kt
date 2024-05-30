@@ -12,15 +12,17 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import edu.tasklynx.tasklynxmobile.R
 import edu.tasklynx.tasklynxmobile.TaskLynxApplication
-import edu.tasklynx.tasklynxmobile.adapters.TrabajoAdapter
+import edu.tasklynx.tasklynxmobile.ui.adapters.TrabajoAdapter
 import edu.tasklynx.tasklynxmobile.data.Repository
 import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.databinding.ActivityMainBinding
 import edu.tasklynx.tasklynxmobile.models.Trabajo
+import edu.tasklynx.tasklynxmobile.models.TrabajoRoom
 import edu.tasklynx.tasklynxmobile.ui.login.LoginActivity
 import edu.tasklynx.tasklynxmobile.ui.trabajo.TrabajoDetailActivity
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_ID_TAG
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_PASS_TAG
+import edu.tasklynx.tasklynxmobile.utils.TASK_FINISHED
 import edu.tasklynx.tasklynxmobile.utils.checkConnection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -37,11 +39,25 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: TrabajoAdapter
     private var priority: Int = 0
+    private var taskPosition: Int = 0
+
+    private var tasksList: MutableList<Trabajo> = mutableListOf()
 
     private val vm: MainViewModel by viewModels {
         val db = (application as TaskLynxApplication).tasksDB
         val ds = TaskLynxDataSource(db.trabajoDao())
         MainViewModelFactory(Repository(ds), employeeId, employeePassword)
+    }
+
+    private val adapterTask by lazy {
+        TrabajoAdapter(
+            onClickTrabajo = { task, position ->
+                taskPosition = position
+                taskDetailResult.launch(
+                    TrabajoDetailActivity.navigate(this@MainActivity, task)
+                )
+            }
+        )
     }
 
     /**
@@ -60,16 +76,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Function to receive info from TrabajoDetailActivity
+     */
+    private val taskDetailResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data: Intent? = result.data
+        if (result.resultCode == Activity.RESULT_OK) {
+            val taskFinished = data!!.getBooleanExtra(TASK_FINISHED, false)
+
+            if (taskFinished) {
+                tasksList.removeAt(taskPosition)
+                adapter.notifyItemRemoved(taskPosition)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = TrabajoAdapter(
-            onClickTrabajo = { idTask ->
-                TrabajoDetailActivity.navigate(this@MainActivity, idTask)
-            }
-        )
+        adapter = adapterTask
 
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = adapter
@@ -161,13 +190,11 @@ class MainActivity : AppCompatActivity() {
         if (checkConnection(this)) {
             lifecycleScope.launch {
                 vm.currentPendingTasks.collect { tasks ->
-                    adapter.submitList(
-                        if (ascendingOrder) {
-                            tasks.sortedBy { it.prioridad }
-                        } else {
-                            tasks.sortedByDescending { it.prioridad }
-                        }
-                    )
+                    tasksList = if (ascendingOrder)
+                        tasks.sortedBy { it.prioridad }.toMutableList()
+                    else tasks.sortedByDescending { it.prioridad }.toMutableList()
+
+                    adapter.submitList(tasksList)
                 }
             }
         } else {
@@ -179,13 +206,11 @@ class MainActivity : AppCompatActivity() {
         if (checkConnection(this)) {
             lifecycleScope.launch {
                 vm.currentCompletedTasks.collect { tasks ->
-                    adapter.submitList(
-                        if (ascendingOrder) {
-                            tasks.sortedBy { it.prioridad }
-                        } else {
-                            tasks.sortedByDescending { it.prioridad }
-                        }
-                    )
+                    tasksList = if (ascendingOrder)
+                        tasks.sortedBy { it.prioridad }.toMutableList()
+                    else tasks.sortedByDescending { it.prioridad }.toMutableList()
+
+                    adapter.submitList(tasksList)
                 }
             }
         } else {
@@ -210,7 +235,8 @@ class MainActivity : AppCompatActivity() {
                         flow.catch {
                             Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
                         }.collect { trabajos ->
-                            adapter.submitList(trabajos.filter { t -> t.prioridad == priority })
+                            tasksList = trabajos.filter { t -> t.prioridad == priority }.toMutableList()
+                            adapter.submitList(tasksList)
                         }
                     }
                 }

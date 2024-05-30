@@ -31,10 +31,10 @@ class TasklynxAPI {
 
         // Finish a task by its id
         @PUT("trabajos/finalizar/{id}")
-        fun finishTask(
+        suspend fun finishTask(
             @Path("id") id: String,
             @Query("fec_fin") finishDate: String,
-            @Query("tiempo") timeSpend: Int
+            @Query("tiempo") timeSpend: Double
         ): TrabajoSingleResponse
     }
 }

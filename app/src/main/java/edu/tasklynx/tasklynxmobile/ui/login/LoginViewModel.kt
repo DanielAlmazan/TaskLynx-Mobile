@@ -16,6 +16,7 @@ class LoginViewModel(
         repository.fetchPendingTasksByLoggedEmployee(id, password).catch {
             Log.e("ERROR", "Credenciales incorrectas")
         }.collect { result = true }
+
         return@runBlocking result
     }
 }

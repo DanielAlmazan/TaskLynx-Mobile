@@ -9,18 +9,22 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
+import edu.tasklynx.tasklynxmobile.models.TrabajoRoom
 
-@Database(entities = [Trabajo::class, Trabajador::class], version = 1)
-@TypeConverters(TrabajadorConverter::class)
-abstract class tasklynxDB: RoomDatabase() {
+//@TypeConverters(TrabajadorConverter::class)
+@Database(entities = [TrabajoRoom::class, Trabajador::class], version = 2)
+abstract class TasklynxDB: RoomDatabase() {
     abstract fun trabajoDao(): TrabajoDao
 }
 
 @Dao
 interface TrabajoDao {
     @Query("SELECT * FROM trabajo")
-    suspend fun getTasks(): List<Trabajo>
+    suspend fun getTasks(): List<TrabajoRoom>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTask(trabajo: Trabajo)
+    suspend fun insertTask(task: TrabajoRoom)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEmployee(employee: Trabajador)
 }

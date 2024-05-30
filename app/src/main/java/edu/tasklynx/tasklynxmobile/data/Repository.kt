@@ -7,8 +7,8 @@ import edu.tasklynx.tasklynxmobile.models.TrabajoRoom
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class Repository(val ds: TaskLynxDataSource) {
-    val TAG = Repository::class.java.simpleName
+class Repository(private val ds: TaskLynxDataSource) {
+    private val TAG = Repository::class.java.simpleName
 
     // API
     fun fetchPendingTasksByLoggedEmployee(id: String, password: String): Flow<List<Trabajo>> {

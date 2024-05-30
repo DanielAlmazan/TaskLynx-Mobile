@@ -4,23 +4,41 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	android:padding="16dp">
-	
-	<EditText
-		android:id="@+id/editTextDate"
+
+	<Button
+		android:id="@+id/btnDatePicker"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:ems="10"
-		android:hint="@string/txt_select_ending_date"
-		android:inputType="date" />
-	
+		android:text="@string/btn_DatePicker" />
+
+	<TextView
+		android:id="@+id/tvDate"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/txt_date_selected"
+		android:textAlignment="center"
+		android:visibility="invisible" />
+
 	<com.google.android.material.textfield.TextInputLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
-		
+
 		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/tieHours"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/txt_set_number_hours"
 			android:inputType="number" />
+
+		<TextView
+			android:id="@+id/txtError"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="@string/txt_error_modal"
+			android:textAlignment="center"
+			android:textColor="@color/md_theme_error"
+			android:textSize="16sp"
+			android:visibility="invisible" />
 	</com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

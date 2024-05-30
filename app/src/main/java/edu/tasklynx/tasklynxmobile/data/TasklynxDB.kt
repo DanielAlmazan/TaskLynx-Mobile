@@ -22,7 +22,7 @@ interface TrabajoDao {
     @Query("SELECT * FROM trabajo")
     suspend fun getTasks(): List<TrabajoRoom>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertTask(task: TrabajoRoom)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

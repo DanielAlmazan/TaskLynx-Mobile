@@ -210,7 +210,9 @@ class MainActivity : AppCompatActivity() {
                         tasks.sortedBy { it.prioridad }.toMutableList()
                     else tasks.sortedByDescending { it.prioridad }.toMutableList()
 
-                    adapter.submitList(tasksList)
+                    adapter.submitList(tasksList.filter {
+                        it.idTrabajador!!.idTrabajador == employeeId
+                    })
                 }
             }
         } else {
@@ -235,7 +237,8 @@ class MainActivity : AppCompatActivity() {
                         flow.catch {
                             Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
                         }.collect { trabajos ->
-                            tasksList = trabajos.filter { t -> t.prioridad == priority }.toMutableList()
+                            tasksList =
+                                trabajos.filter { t -> t.prioridad == priority }.toMutableList()
                             adapter.submitList(tasksList)
                         }
                     }

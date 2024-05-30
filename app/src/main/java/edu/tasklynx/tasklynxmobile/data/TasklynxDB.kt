@@ -12,7 +12,7 @@ import edu.tasklynx.tasklynxmobile.models.Trabajo
 import edu.tasklynx.tasklynxmobile.models.TrabajoRoom
 
 //@TypeConverters(TrabajadorConverter::class)
-@Database(entities = [TrabajoRoom::class, Trabajador::class], version = 2)
+@Database(entities = [TrabajoRoom::class, Trabajador::class], version = 1)
 abstract class TasklynxDB: RoomDatabase() {
     abstract fun trabajoDao(): TrabajoDao
 }
@@ -22,7 +22,7 @@ interface TrabajoDao {
     @Query("SELECT * FROM trabajo")
     suspend fun getTasks(): List<TrabajoRoom>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertTask(task: TrabajoRoom)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

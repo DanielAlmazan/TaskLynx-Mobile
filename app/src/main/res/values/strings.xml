@@ -17,7 +17,8 @@
 	<string name="txt_task_ending_date">Ending date: %s</string>
 	<string name="txt_task_priority">Priority: %s</string>
 	<string name="txt_task_time">Time: %s</string>
-	
+	<string name="txt_date_selected">Date selected: %s</string>
+
 	<string name="txt_optBottom_pendingTasks">Pending tasks</string>
 	<string name="txt_optBottom_completedTAsks">Completed tasks</string>
 	<string name="txt_optTop_sort">Sort tasks by priority</string>
@@ -28,4 +29,6 @@
 	<string name="txt_select_ending_date">Select ending date</string>
 	<string name="txt_set_number_hours">Set a number of hours</string>
 	<string name="txt_opt_logout">Logout</string>
+    <string name="btn_DatePicker">Select a date</string>
+	<string name="txt_error_modal">You must set every field</string>
 </resources>

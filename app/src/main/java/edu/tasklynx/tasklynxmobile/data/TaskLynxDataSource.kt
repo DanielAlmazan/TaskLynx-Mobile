@@ -31,7 +31,15 @@ class TaskLynxDataSource(private val db: TrabajoDao) {
                 task.descripcion,
                 task.fecFin,
                 task.fecIni,
-                null,
+                Trabajador(
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    task.idTrabajador!!,
+                    ""
+                ),
                 task.prioridad,
                 task.tiempo
             ))

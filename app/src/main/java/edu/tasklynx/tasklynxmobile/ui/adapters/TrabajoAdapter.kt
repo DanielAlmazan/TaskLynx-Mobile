@@ -1,4 +1,4 @@
-package edu.tasklynx.tasklynxmobile.adapters
+package edu.tasklynx.tasklynxmobile.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,26 +6,29 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import edu.tasklynx.tasklynxmobile.databinding.TrabajoDetailBinding
 import edu.tasklynx.tasklynxmobile.databinding.TrabajoItemBinding
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
 class TrabajoAdapter (
-    val onClickTrabajo: (task: Trabajo) -> Unit,
+    val onClickTrabajo: (task: Trabajo, position: Int) -> Unit,
 ): ListAdapter<Trabajo, TrabajoAdapter.TrabajoViewHolder>(TrabajoDiffCallback()) {
-
     inner class TrabajoViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val binding = TrabajoItemBinding.bind(view)
+        private val binding = TrabajoItemBinding.bind(view)
 
-        fun bind (trabajo: Trabajo) {
-            binding.tvTaskID.text = trabajo.codTrabajo
-            binding.tvDescription.text = trabajo.descripcion
-            binding.tvStartingDate.text = trabajo.fecIni
-            binding.tvEndingDate.text = trabajo.fecFin
-            binding.tvPriority.text = trabajo.prioridad.toString()
+        fun bind (task: Trabajo) {
+            binding.tvTaskID.text = task.codTrabajo
+            binding.tvDescription.text = task.descripcion
+            binding.tvStartingDate.text = task.fecIni
+            binding.tvPriority.text = task.prioridad.toString()
+
+            if(task.fecFin.isNullOrBlank()) {
+                binding.tvEndingDate.visibility = View.INVISIBLE
+            } else {
+                binding.tvEndingDate.text = task.fecFin
+            }
 
             binding.root.setOnClickListener {
-                onClickTrabajo(trabajo.codTrabajo)
+                onClickTrabajo(task, adapterPosition)
             }
         }
     }
@@ -43,8 +46,6 @@ class TrabajoAdapter (
     override fun onBindViewHolder(holder: TrabajoViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
-
-
 }
 
 class TrabajoDiffCallback: DiffUtil.ItemCallback<Trabajo>() {

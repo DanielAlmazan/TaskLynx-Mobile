@@ -1,11 +1,12 @@
 package edu.tasklynx.tasklynxmobile.models
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "trabajador")
 data class Trabajador(
     @SerializedName("apellidos")
@@ -23,38 +24,4 @@ data class Trabajador(
     val idTrabajador: String,
     @SerializedName("nombre")
     val nombre: String
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: ""
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(apellidos)
-        parcel.writeString(contraseña)
-        parcel.writeString(dni)
-        parcel.writeString(email)
-        parcel.writeString(especialidad)
-        parcel.writeString(idTrabajador)
-        parcel.writeString(nombre)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Trabajador> {
-        override fun createFromParcel(parcel: Parcel): Trabajador {
-            return Trabajador(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Trabajador?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+) : Parcelable

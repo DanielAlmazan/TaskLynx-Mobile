@@ -8,6 +8,7 @@ import androidx.core.content.getSystemService
 
 val EMPLOYEE_ID_TAG = "employee_id"
 val EMPLOYEE_PASS_TAG = "employee_pass"
+val TASK_FINISHED = "task_finished"
 
 fun checkConnection(context: Context): Boolean {
     // Check if there is a network connection

@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import androidx.core.content.getSystemService
 
+val EMPLOYEE_ID_TAG = "employee_id"
+val EMPLOYEE_PASS_TAG = "employee_pass"
 
 fun checkConnection(context: Context): Boolean {
     // Check if there is a network connection
@@ -29,5 +31,5 @@ fun checkConnection(context: Context): Boolean {
     } else {
         return false
     }
-
 }
+

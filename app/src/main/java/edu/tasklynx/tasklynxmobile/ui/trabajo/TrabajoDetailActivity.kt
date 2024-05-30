@@ -63,66 +63,66 @@ class TrabajoDetailActivity: AppCompatActivity() {
             finishAfterTransition()
         }
 
-        if(checkConnection(this)){
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED){
-                    vm.trabajo.collect {trabajo ->
-                        trabajo?.let {
-                            binding.tvTaskID.text = trabajo.codTrabajo
-                            binding.tvSpeciality.text = trabajo.categoria
-                            binding.tvDescription.text = trabajo.descripcion
-                            binding.tvStartingDate.text = trabajo.fecIni
-                            binding.tvEndingDate.text = trabajo.fecFin
-                            binding.tvPriority.text = trabajo.prioridad.toString()
-                            binding.tvTime.text = trabajo.tiempo.toString()
-
-                            binding.mToolbar.setTitle(trabajo.codTrabajo)
-
-                            if (trabajo.fecFin == null) {
-                                binding.finishBtn.isEnabled = true
-                                binding.finishBtn.visibility = View.VISIBLE
-                            } else {
-                                binding.finishBtn.isEnabled = false
-                                binding.finishBtn.visibility = View.INVISIBLE
-                            }
-
-                            binding.finishBtn.setOnClickListener {
-
-                                val currentDateTime = LocalDateTime.now()
-                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                val finishDate  = currentDateTime.format(formatter).toString()
-
-                                val dialogView = EditText(this@TrabajoDetailActivity)
-
-                                val dialog = AlertDialog.Builder(this@TrabajoDetailActivity)
-                                    .setTitle("Insert the time spent on this task")
-                                    .setView(dialogView)
-                                    .setPositiveButton("OK") { dialog, _ ->
-                                        //TODO: Controlar que el usuario inserte un número
-                                        val timeSpent = dialogView.text.toString().toInt()
-                                        trabajo.fecFin = finishDate
-                                        trabajo.tiempo = timeSpent
-                                        lifecycleScope.launch {
-                                            Log.d("TrabajoDetailActivity", "Finishing task ${trabajo}")
-                                            // TODO : Manejar los errores al finalizar la tarea
-                                            vm.finishTask(trabajo.codTrabajo, finishDate, timeSpent)
-                                            // Error del finish task: Error en el repository.
-                                            //vm.insertTask(trabajo)
-                                            // Error del insert: FK en la bbdd.
-                                        }
-                                        dialog.dismiss()
-                                    }
-                                    .setNegativeButton("Cancel") { dialog, _ ->
-                                        dialog.dismiss()
-                                    }
-                                    .create()
-
-                                dialog.show()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        if(checkConnection(this)){
+//            lifecycleScope.launch {
+//                repeatOnLifecycle(Lifecycle.State.STARTED){
+//                    vm.trabajo.collect {trabajo ->
+//                        trabajo?.let {
+//                            binding.tvTaskID.text = trabajo.codTrabajo
+//                            binding.tvSpeciality.text = trabajo.categoria
+//                            binding.tvDescription.text = trabajo.descripcion
+//                            binding.tvStartingDate.text = trabajo.fecIni
+//                            binding.tvEndingDate.text = trabajo.fecFin
+//                            binding.tvPriority.text = trabajo.prioridad.toString()
+//                            binding.tvTime.text = trabajo.tiempo.toString()
+//
+//                            binding.mToolbar.setTitle(trabajo.codTrabajo)
+//
+//                            if (trabajo.fecFin == null) {
+//                                binding.finishBtn.isEnabled = true
+//                                binding.finishBtn.visibility = View.VISIBLE
+//                            } else {
+//                                binding.finishBtn.isEnabled = false
+//                                binding.finishBtn.visibility = View.INVISIBLE
+//                            }
+//
+//                            binding.finishBtn.setOnClickListener {
+//
+//                                val currentDateTime = LocalDateTime.now()
+//                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+//                                val finishDate  = currentDateTime.format(formatter).toString()
+//
+//                                val dialogView = EditText(this@TrabajoDetailActivity)
+//
+//                                val dialog = AlertDialog.Builder(this@TrabajoDetailActivity)
+//                                    .setTitle("Insert the time spent on this task")
+//                                    .setView(dialogView)
+//                                    .setPositiveButton("OK") { dialog, _ ->
+//                                        //TODO: Controlar que el usuario inserte un número
+//                                        val timeSpent = dialogView.text.toString().toInt()
+//                                        trabajo.fecFin = finishDate
+//                                        trabajo.tiempo = timeSpent
+//                                        lifecycleScope.launch {
+//                                            Log.d("TrabajoDetailActivity", "Finishing task ${trabajo}")
+//                                            // TODO : Manejar los errores al finalizar la tarea
+//                                            vm.finishTask(trabajo.codTrabajo, finishDate, timeSpent)
+//                                            // Error del finish task: Error en el repository.
+//                                            //vm.insertTask(trabajo)
+//                                            // Error del insert: FK en la bbdd.
+//                                        }
+//                                        dialog.dismiss()
+//                                    }
+//                                    .setNegativeButton("Cancel") { dialog, _ ->
+//                                        dialog.dismiss()
+//                                    }
+//                                    .create()
+//
+//                                dialog.show()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }

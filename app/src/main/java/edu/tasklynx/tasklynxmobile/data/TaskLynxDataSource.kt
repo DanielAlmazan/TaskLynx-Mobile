@@ -9,20 +9,12 @@ class TaskLynxDataSource(val db: TrabajoDao) {
 
 
     //API Actions
-    suspend fun getPendingTasksByEmployeeId(id: String): TrabajoListResponse {
-        return api.getPendingTasksByEmployeeId(id)
-    }
-
-    suspend fun getTaskById(id: String): TrabajoSingleResponse {
-        return api.getTaskById(id)
+    suspend fun getPendingTasksByLoggedEmployee(id: String, password: String): TrabajoListResponse {
+        return api.getPendingTasksByLoggedEmployee(id, password)
     }
 
     fun finishTask(id: String, finishDate: String, timeSpent: Int): TrabajoSingleResponse {
         return api.finishTask(id, finishDate, timeSpent)
-    }
-
-    suspend fun getPendingTasksByEmployeeIdAndPriority(id: String, prioridad: Int): TrabajoListResponse {
-        return api.getPendingJobsByPriority(id, prioridad)
     }
 
     //Room Actions

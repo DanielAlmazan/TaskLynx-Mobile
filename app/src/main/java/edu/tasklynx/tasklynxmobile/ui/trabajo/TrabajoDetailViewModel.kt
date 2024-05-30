@@ -9,9 +9,9 @@ import edu.tasklynx.tasklynxmobile.models.Trabajo
 class TrabajoDetailViewModel (
     val repository: Repository, idTrabajo: String
 ): ViewModel() {
-    private val _trabajo = repository.fetchTaskById(idTrabajo)
-    val trabajo
-        get() = _trabajo
+//    private val _trabajo = repository.fetchTaskById(idTrabajo)
+//    val trabajo
+//        get() = _trabajo
 
     fun finishTask(id: String, finishDate: String, timeSpent: Int) {
         repository.finishTask(id, finishDate, timeSpent)

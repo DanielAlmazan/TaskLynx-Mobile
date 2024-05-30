@@ -2,7 +2,6 @@ package edu.tasklynx.tasklynxmobile.data
 
 import TrabajoListResponse
 import TrabajoSingleResponse
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -15,18 +14,20 @@ class TasklynxAPI {
         const val BASE_URL = "http://10.0.2.2:8080/api/"
         // No toqueis la url, es la que se usa para el emulador de android studio
 
-        fun getRetrofit2Api(): TasklinkAPIInterface {
+        fun getRetrofit2Api(): TaskLynxAPIInterface {
             return Retrofit.Builder().baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build()
-                .create(TasklinkAPIInterface::class.java)
+                .create(TaskLynxAPIInterface::class.java)
         }
     }
 
-    interface TasklinkAPIInterface {
-
-        // Get pending tasks for an employee by his id
-        @GET("trabajadores/{id}/trabajos/pendientes")
-        suspend fun getPendingTasksByEmployeeId(@Path("id") id: String): TrabajoListResponse
+    interface TaskLynxAPIInterface {
+        // Get pending tasks by a logged employee
+        @GET("trabajadores/{id}/{password}")
+        suspend fun getPendingTasksByLoggedEmployee(
+            @Path("id") id: String,
+            @Path("password") password: String
+        ): TrabajoListResponse
 
         // Finish a task by its id
         @PUT("trabajos/finalizar/{id}")
@@ -35,13 +36,5 @@ class TasklynxAPI {
             @Query("fec_fin") finishDate: String,
             @Query("tiempo") timeSpend: Int
         ): TrabajoSingleResponse
-
-        // Get a task by its id
-        @GET("trabajos/{id}")
-        suspend fun getTaskById(@Path("id") id: String): TrabajoSingleResponse
-
-        // Get pending jobs for an specific priority indicated by the user
-        @GET("trabajadores/{id}/trabajos/pendientes/{prioridad}")
-        suspend fun getPendingJobsByPriority(@Path("id") id: String, @Path("prioridad") prioridad: Int): TrabajoListResponse
     }
 }

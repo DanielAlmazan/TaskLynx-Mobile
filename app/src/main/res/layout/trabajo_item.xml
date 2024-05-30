@@ -9,62 +9,48 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="10dp">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
-
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        
         <TextView
             android:id="@+id/tvTaskID"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:hint="taskID"/>
-
+            android:textAlignment="viewStart"
+            tools:text="@string/txt_task_id" />
+        
         <TextView
             android:id="@+id/tvDescription"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTaskID"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:hint="Description"/>
-
+            android:textAlignment="viewStart"
+            tools:text="@string/txt_task_description" />
+        
         <TextView
             android:id="@+id/tvStartingDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDescription"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:hint="startingDate"/>
-
+            android:textAlignment="viewStart"
+            tools:text="@string/txt_task_starting_date" />
+        
         <TextView
             android:id="@+id/tvEndingDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvStartingDate"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:hint="endingDate"/>
-
-
+            android:textAlignment="viewStart"
+            tools:text="@string/txt_task_ending_date" />
+        
+        
         <TextView
             android:id="@+id/tvPriority"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvEndingDate"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:hint="priority"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textAlignment="viewStart"
+            tools:text="@string/txt_task_priority" />
+    
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

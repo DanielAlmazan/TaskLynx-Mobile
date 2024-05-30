@@ -2,6 +2,8 @@
 <resources>
 	<color name="black">#FF000000</color>
 	<color name="white">#FFFFFFFF</color>
+	<color name="textColorLinkLight">#95CCD3</color>
+	<color name="light_gray">#B7B7B7</color>
 	<color name="md_theme_primary">#006972</color>
 	<color name="md_theme_onPrimary">#FFFFFF</color>
 	<color name="md_theme_primaryContainer">#9DF0FB</color>
@@ -143,4 +145,8 @@
 	<color name="md_theme_surfaceContainer_highContrast">#E9EFF0</color>
 	<color name="md_theme_surfaceContainerHigh_highContrast">#E3E9EA</color>
 	<color name="md_theme_surfaceContainerHighest_highContrast">#DEE4E4</color>
+	<color name="priority_high">#FF0000</color>
+	<color name="priority_medium">#FFA500</color>
+	<color name="priority_low">#AFC100</color>
+	<color name="priority_none">#008000</color>
 </resources>

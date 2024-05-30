@@ -73,11 +73,28 @@ class TrabajoDetailActivity : AppCompatActivity() {
             backToMainActivity()
         }
 
-        binding.tvTaskID.text = task.codTrabajo
-        binding.tvSpeciality.text = task.categoria
-        binding.tvDescription.text = task.descripcion
-        binding.tvStartingDate.text = task.fecIni
-        binding.tvPriority.text = task.prioridad.toString()
+        binding.tvTaskID.text = getString(R.string.txt_task_id, task.codTrabajo)
+        binding.tvSpeciality.text = getString(R.string.txt_task_category, task.categoria)
+        binding.tvDescription.text = getString(R.string.txt_task_description, task.descripcion)
+        binding.tvStartingDate.text = getString(R.string.txt_task_starting_date, task.fecIni)
+        binding.tvPriority.text = getString(R.string.txt_task_priority, task.prioridad.toString())
+
+        when (task.prioridad) {
+            1 -> {
+                binding.tvPriority.setBackgroundColor(getColor(R.color.priority_high))
+                binding.tvPriority.setTextColor(getColor(R.color.white))
+            }
+            2 -> {
+                binding.tvPriority.setBackgroundColor(getColor(R.color.priority_medium))
+            }
+            3 -> {
+                binding.tvPriority.setBackgroundColor(getColor(R.color.priority_low))
+            }
+            4 -> {
+                binding.tvPriority.setBackgroundColor(getColor(R.color.priority_none))
+                binding.tvPriority.setTextColor(getColor(R.color.white))
+            }
+        }
 
         if (task.fecFin.isNullOrBlank()) {
             binding.tvEndingDate.visibility = View.INVISIBLE
@@ -114,7 +131,6 @@ class TrabajoDetailActivity : AppCompatActivity() {
 
             setPositiveButton(android.R.string.ok) { dialog, _ ->
                 if (checkConnection(this@TrabajoDetailActivity)) {
-                    //TODO: Controlar que el usuario inserte un número
                     val timeSpent = dialogView.text.toString().toDouble()
                     task.fecFin = finishDate
                     task.tiempo = timeSpent
@@ -136,10 +152,9 @@ class TrabajoDetailActivity : AppCompatActivity() {
                         binding.tvEndingDate.visibility = View.VISIBLE
                         binding.finishBtn.visibility = View.INVISIBLE
                     } else {
-                        // TODO: Cambiar string
                         Toast.makeText(
                             this@TrabajoDetailActivity,
-                            "Error finalizando trabajo",
+                            getString(R.string.txt_error_finalizing_task),
                             Toast.LENGTH_SHORT
                         ).show()
                     }

@@ -1,5 +1,6 @@
 package edu.tasklynx.tasklynxmobile.ui.login
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,10 +13,32 @@ import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.data.Repository
 import edu.tasklynx.tasklynxmobile.databinding.ActivityLoginBinding
 import edu.tasklynx.tasklynxmobile.ui.main.MainActivity
+import edu.tasklynx.tasklynxmobile.ui.main.MainViewModel
+import edu.tasklynx.tasklynxmobile.ui.main.MainViewModelFactory
+import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_ID_TAG
+import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_PASS_TAG
 import kotlinx.coroutines.launch
 
-class LoginActivity: AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+
+    companion object {
+        /**
+         * Function to start the activity
+         */
+        fun navigate(activity: Activity): Intent {
+            val intent = Intent(activity, LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            return intent
+        }
+    }
+
+    private val vm: LoginViewModel by viewModels {
+        val db = (application as TaskLynxApplication).tasksDB
+        val ds = TaskLynxDataSource(db.trabajoDao())
+        LoginViewModelFactory(Repository(ds))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,37 +48,37 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         binding.button.setOnClickListener {
             login()
         }
     }
 
-    private fun getDataFromFields(): Pair<String, String> {
-        val employeeId = binding.tiedIdField.text.toString()
-        val password = binding.tiedPasswordField.text.toString()
-        return Pair(employeeId, password)
-    }
-
-    private fun validateFields(email: String, password: String): Boolean {
-        if (email.isEmpty() || password.isEmpty()) {
-            return false
-        }
-        return true
-    }
-
     private fun login() {
-        val (employeeId, password) = getDataFromFields()
-        if (validateFields(employeeId, password)) {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra("employeeID", employeeId)
+        val id = binding.tiedIdField.text
+        val password = binding.tiedPasswordField.text
+
+        if (!id.isNullOrBlank() && !password.isNullOrBlank()) {
+            Log.i(LoginActivity::class.java.simpleName, "ID: $id - PASS: $password")
+            if(vm.checkLogin(id.toString(), password.toString())) {
+                backToMainActivity(id.toString(), password.toString())
+            } else {
+                Toast.makeText(this, "Incorrect credentials", Toast.LENGTH_SHORT).show()
             }
-            Log.d("LoginActivity", "EmployeeID: $employeeId")
-            startActivity(intent)
-            finish()
-            //TODO Controlar aquí que el trabajador existe y coincide con la pass. Si no, la app revienta.
         } else {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
         }
     }
 
+    /**
+     * Function to set the result of the activity and finishes it
+     */
+    private fun backToMainActivity(id: String, pass: String) {
+        val intentResult: Intent = Intent().apply {
+            putExtra(EMPLOYEE_ID_TAG, id)
+            putExtra(EMPLOYEE_PASS_TAG, pass)
+        }
+        setResult(Activity.RESULT_OK, intentResult)
+        finish()
+    }
 }

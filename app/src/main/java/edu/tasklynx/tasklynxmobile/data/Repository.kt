@@ -11,34 +11,18 @@ import kotlinx.coroutines.runBlocking
 class Repository(val ds: TaskLynxDataSource) {
     val TAG = Repository::class.java.simpleName
 
-    fun fetchPendingTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
+    fun fetchPendingTasksByLoggedEmployee(id: String, password: String): Flow<List<Trabajo>> {
         return flow {
             val trabajoListResponse: TrabajoListResponse
-            var tasks = emptyList<Trabajo>()
+            val tasks: List<Trabajo>
 
             try {
-                trabajoListResponse = ds.getPendingTasksByEmployeeId(id)
+                trabajoListResponse = ds.getPendingTasksByLoggedEmployee(id, password)
                 tasks = trabajoListResponse.result
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching tasks from the API: ${e.message}")
-            } finally {
                 emit(tasks)
-            }
-        }
-    }
-
-    fun fetchTaskById(id: String): Flow<Trabajo?> {
-        return flow {
-            val trabajoSingleResponse: TrabajoSingleResponse
-            var trabajo: Trabajo? = null
-
-            try {
-                trabajoSingleResponse = ds.getTaskById(id)
-                trabajo = trabajoSingleResponse.result
             } catch (e: Exception) {
-                Log.e(TAG, "Error fetching task from the API: ${e.message}")
-            } finally {
-                emit(trabajo)
+                Log.e(TAG, "Error fetching tasks from the API in REPOSITORY: ${e.message}")
+                throw e
             }
         }
     }
@@ -56,22 +40,6 @@ class Repository(val ds: TaskLynxDataSource) {
                 //TODO Da error aquí.
             }
             trabajo
-        }
-    }
-
-    fun fetchPendingTasksByEmployeeIdAndPriority(id: String, prioridad: Int): Flow<List<Trabajo>> {
-        return flow {
-            val trabajoListResponse: TrabajoListResponse
-            var tasks = emptyList<Trabajo>()
-
-            try {
-                trabajoListResponse = ds.getPendingTasksByEmployeeIdAndPriority(id, prioridad)
-                tasks = trabajoListResponse.result
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching tasks from the API: ${e.message}")
-            } finally {
-                emit(tasks)
-            }
         }
     }
 

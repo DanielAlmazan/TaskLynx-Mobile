@@ -6,10 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
 @Database(entities = [Trabajo::class, Trabajador::class], version = 1)
+@TypeConverters(TrabajadorConverter::class)
 abstract class tasklynxDB: RoomDatabase() {
     abstract fun trabajoDao(): TrabajoDao
 }

@@ -1,84 +1,87 @@
 package edu.tasklynx.tasklynxmobile.data
 
+import TrabajoListResponse
+import TrabajoSingleResponse
 import android.util.Log
-import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 
-class Repository(db: tasklynxDB, val ds: RemoteDataSource) {
+class Repository(val ds: TaskLynxDataSource) {
     val TAG = Repository::class.java.simpleName
-    private val localDataSource = LocalDataSource(db)
-
-    suspend fun getEmployeeByEmailAndPass(email: String, pass: String): Trabajador {
-        return ds.getEmployeeByEmailAndPass(email, pass)
-    }
 
     fun fetchPendingTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
         return flow {
-            var resultApi = emptyList<Trabajo>()
+            val trabajoListResponse: TrabajoListResponse
+            var tasks = emptyList<Trabajo>()
 
             try {
-                resultApi = ds.getPendingTasksByEmployeeId(id)
+                trabajoListResponse = ds.getPendingTasksByEmployeeId(id)
+                tasks = trabajoListResponse.result
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching tasks from the API: ${e.message}")
             } finally {
-                emit(resultApi)
+                emit(tasks)
             }
         }
     }
 
-    fun fetchCompletedTasksByEmployeeId(id: String): Flow<List<Trabajo>> {
+    fun fetchTaskById(id: String): Flow<Trabajo?> {
         return flow {
-            var resultApi = emptyList<Trabajo>()
+            val trabajoSingleResponse: TrabajoSingleResponse
+            var trabajo: Trabajo? = null
 
             try {
-                resultApi = ds.getCompletedTasksByEmployeeId(id)
+                trabajoSingleResponse = ds.getTaskById(id)
+                trabajo = trabajoSingleResponse.result
             } catch (e: Exception) {
-                Log.e(TAG, "Error fetching tasks from the API: ${e.message}")
+                Log.e(TAG, "Error fetching task from the API: ${e.message}")
             } finally {
-                emit(resultApi)
+                emit(trabajo)
             }
         }
     }
 
-    fun fetchPendingTasksByEmployeeIdOrderedByPriority(id: String): Flow<List<Trabajo>> {
+    fun finishTask(id: String, finishDate: String, timeSpent: Int): Trabajo? {
+        return runBlocking {
+            val trabajoSingleResponse: TrabajoSingleResponse
+            var trabajo: Trabajo? = null
+            try {
+                trabajoSingleResponse = ds.finishTask(id, finishDate, timeSpent)
+                trabajo = trabajoSingleResponse.result
+                Log.d(TAG, "Task finished: $trabajo")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error finishing task from the API: ${e.message}")
+                //TODO Da error aquí.
+            }
+            trabajo
+        }
+    }
+
+    fun fetchPendingTasksByEmployeeIdAndPriority(id: String, prioridad: Int): Flow<List<Trabajo>> {
         return flow {
-            var resultApi = emptyList<Trabajo>()
+            val trabajoListResponse: TrabajoListResponse
+            var tasks = emptyList<Trabajo>()
 
             try {
-                resultApi = ds.getPendingTasksByEmployeeIdOrderedByPriority(id)
+                trabajoListResponse = ds.getPendingTasksByEmployeeIdAndPriority(id, prioridad)
+                tasks = trabajoListResponse.result
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching tasks from the API: ${e.message}")
             } finally {
-                emit(resultApi)
+                emit(tasks)
             }
         }
-    }
-
-    suspend fun fetchPendingTasksByEmployeeIdAndPriority(id: String, prioridad: Int): Flow<List<Trabajo>> {
-        return flow {
-            var resultApi = emptyList<Trabajo>()
-
-            try {
-                resultApi = ds.getPendingTasksByEmployeeIdAndPriority(id, prioridad)
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching tasks from the API: ${e.message}")
-            } finally {
-                emit(resultApi)
-            }
-        }
-    }
-
-    fun finishTask(id: String) {
-        ds.finishTask(id)
     }
 
     suspend fun insertTask(trabajo: Trabajo) {
-        localDataSource.insertTask(trabajo)
+        ds.insertTask(trabajo)
     }
 
-    suspend fun fetchTasksfromDB(): List<Trabajo> {
-        return localDataSource.getTasks()
+    fun fetchTasksfromDB(): Flow<List<Trabajo>> {
+        return flow {
+            emit(ds.getTasks())
+        }
     }
 }

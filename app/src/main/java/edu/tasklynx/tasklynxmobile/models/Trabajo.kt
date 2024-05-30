@@ -24,13 +24,13 @@ data class Trabajo(
     @SerializedName("descripcion")
     val descripcion: String,
     @SerializedName("fecFin")
-    val fecFin: String,
+    var fecFin: String,
     @SerializedName("fecIni")
     val fecIni: String,
     @SerializedName("idTrabajador")
-    val idTrabajador: String,
+    val idTrabajador: Trabajador,
     @SerializedName("prioridad")
     val prioridad: Int,
     @SerializedName("tiempo")
-    val tiempo: Int
+    var tiempo: Int
 )

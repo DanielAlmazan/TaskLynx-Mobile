@@ -1,37 +1,42 @@
 package edu.tasklynx.tasklynxmobile.ui.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import edu.tasklynx.tasklynxmobile.data.Repository
-import edu.tasklynx.tasklynxmobile.models.Trabajador
 import edu.tasklynx.tasklynxmobile.models.Trabajo
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
-class MainViewModel (val repository: Repository, trabajador: Trabajador): ViewModel() {
-    private var _currentPendingTasks = repository.fetchPendingTasksByEmployeeId(trabajador.idTrabajador)
+class MainViewModel (val repository: Repository, employeeId: String, priority: Int): ViewModel() {
+    private var _currentPendingTasks = repository.fetchPendingTasksByEmployeeId(employeeId)
         val currentPendingTasks
             get() = _currentPendingTasks
 
-    private var _currentCompletedTasks = repository.fetchCompletedTasksByEmployeeId(trabajador.idTrabajador)
+    private var _currentCompletedTasks = repository.fetchTasksfromDB()
         val currentCompletedTasks
             get() = _currentCompletedTasks
 
-    private var _currentPendingTasksOrderedByPriority = repository.fetchPendingTasksByEmployeeIdOrderedByPriority(trabajador.idTrabajador)
-        val currentPendingTasksOrderedByPriority
-            get() = _currentPendingTasksOrderedByPriority
+    private val _currentPendingTasksFilteredByPriority = MutableLiveData<Flow<List<Trabajo>>>()
+        val currentPendingTasksFilteredByPriority: LiveData<Flow<List<Trabajo>>>
+            get() = _currentPendingTasksFilteredByPriority
 
-    fun finishTask(trabajo: Trabajo) = viewModelScope.launch {
-        repository.finishTask(trabajo.codTrabajo)
+    fun filterTasksByPriority(employeeId: String, priority: Int) {
+        _currentPendingTasksFilteredByPriority.value = repository.fetchPendingTasksByEmployeeIdAndPriority(employeeId, priority)
     }
+
 }
 
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
     private val repository: Repository,
-    private val trabajador: Trabajador
+    private val employeeId: String,
+    private val priority: Int
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(repository, trabajador) as T
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(repository, employeeId, priority) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

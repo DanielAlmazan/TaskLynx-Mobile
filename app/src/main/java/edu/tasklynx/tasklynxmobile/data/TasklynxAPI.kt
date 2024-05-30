@@ -1,16 +1,19 @@
 package edu.tasklynx.tasklynxmobile.data
 
-import edu.tasklynx.tasklynxmobile.models.Trabajador
-import edu.tasklynx.tasklynxmobile.models.Trabajo
+import TrabajoListResponse
+import TrabajoSingleResponse
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 class TasklynxAPI {
     companion object {
-        const val BASE_URL = "http://localhost:8080/api/"
+        const val BASE_URL = "http://10.0.2.2:8080/api/"
+        // No toqueis la url, es la que se usa para el emulador de android studio
 
         fun getRetrofit2Api(): TasklinkAPIInterface {
             return Retrofit.Builder().baseUrl(BASE_URL)
@@ -20,29 +23,25 @@ class TasklynxAPI {
     }
 
     interface TasklinkAPIInterface {
-        // Métodos
 
-        // Get an employee by email and password
-        @GET("trabajadores/{email}/{pass}")
-        suspend fun getEmployeeByEmailAndPass(@Path("email") email: String, @Path("pass") pass: String): Trabajador
-
-        // Get pending jobs for an employee by his id
+        // Get pending tasks for an employee by his id
         @GET("trabajadores/{id}/trabajos/pendientes")
-        suspend fun getPendingJobsByEmployeeId(@Path("id") id: String): List<Trabajo>
+        suspend fun getPendingTasksByEmployeeId(@Path("id") id: String): TrabajoListResponse
 
-        // Get completed jobs
-        @GET("trabajadores/{id}/trabajos/completados")
-        suspend fun getCompletedJobsByEmployeeId(@Path("id") id: String): List<Trabajo>
-
-        // Get pending jobs for an specific employee ordered by priority
-        @GET("trabajadores/{id}/trabajos/pendientes/prioridad")
-        suspend fun getPendingJobsOrderedByPriority(@Path("id") id: String): List<Trabajo>
-
-        // Get pending jobs for an specific by priority indicated by the user
-        @GET("trabajadores/{id}/trabajos/pendientes/{prioridad}")
-        suspend fun getPendingJobsByPriority(@Path("id") id: String, @Path("prioridad") prioridad: Int): List<Trabajo>
-
+        // Finish a task by its id
         @PUT("trabajos/finalizar/{id}")
-        fun finishTask(@Path("id") id: String)
+        fun finishTask(
+            @Path("id") id: String,
+            @Query("fec_fin") finishDate: String,
+            @Query("tiempo") timeSpend: Int
+        ): TrabajoSingleResponse
+
+        // Get a task by its id
+        @GET("trabajos/{id}")
+        suspend fun getTaskById(@Path("id") id: String): TrabajoSingleResponse
+
+        // Get pending jobs for an specific priority indicated by the user
+        @GET("trabajadores/{id}/trabajos/pendientes/{prioridad}")
+        suspend fun getPendingJobsByPriority(@Path("id") id: String, @Path("prioridad") prioridad: Int): TrabajoListResponse
     }
 }

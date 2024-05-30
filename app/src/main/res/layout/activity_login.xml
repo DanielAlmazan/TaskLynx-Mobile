@@ -16,24 +16,25 @@
 		app:srcCompat="@drawable/tasklynx_mobile_oval_logo" />
 	
 	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/tilEmailField"
+		android:id="@+id/tilIdField"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="20dp">
 		
 		<com.google.android.material.textfield.TextInputEditText
-			android:id="@+id/tiedEmailField"
+			android:id="@+id/tiedIdField"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/txt_email_field" />
+			android:hint="@string/txt_id_field" />
 	</com.google.android.material.textfield.TextInputLayout>
 	
 	<com.google.android.material.textfield.TextInputLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="20dp">
-		
+
 		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/tiedPasswordField"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/txt_password_field" />

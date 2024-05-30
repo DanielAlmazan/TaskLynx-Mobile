@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import edu.tasklynx.tasklynxmobile.R
 import edu.tasklynx.tasklynxmobile.databinding.TrabajoItemBinding
 import edu.tasklynx.tasklynxmobile.models.Trabajo
 
@@ -19,7 +20,24 @@ class TrabajoAdapter (
             binding.tvTaskID.text = task.codTrabajo
             binding.tvDescription.text = task.descripcion
             binding.tvStartingDate.text = task.fecIni
-            binding.tvPriority.text = task.prioridad.toString()
+            binding.tvPriority.text = binding.root.context.getString(R.string.txt_task_priority, task.prioridad.toString())
+
+            when (task.prioridad) {
+                1 -> {
+                    binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_high))
+                    binding.tvPriority.setTextColor(binding.root.context.getColor(R.color.white))
+                }
+                2 -> {
+                    binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_medium))
+                }
+                3 -> {
+                    binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_low))
+                }
+                4 -> {
+                    binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_none))
+                    binding.tvPriority.setTextColor(binding.root.context.getColor(R.color.white))
+                }
+            }
 
             if(task.fecFin.isNullOrBlank()) {
                 binding.tvEndingDate.visibility = View.INVISIBLE

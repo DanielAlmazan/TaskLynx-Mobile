@@ -43,14 +43,15 @@
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
             tools:text="@string/txt_task_ending_date" />
-        
-        
+
         <TextView
             android:id="@+id/tvPriority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
+            android:text="@string/txt_task_priority"
+            android:textAlignment="textStart"
             tools:text="@string/txt_task_priority" />
-    
+
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

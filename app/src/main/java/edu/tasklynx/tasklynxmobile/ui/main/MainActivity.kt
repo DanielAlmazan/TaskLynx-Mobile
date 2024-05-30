@@ -17,11 +17,11 @@ import edu.tasklynx.tasklynxmobile.data.Repository
 import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.databinding.ActivityMainBinding
 import edu.tasklynx.tasklynxmobile.models.Trabajo
-import edu.tasklynx.tasklynxmobile.models.TrabajoRoom
 import edu.tasklynx.tasklynxmobile.ui.login.LoginActivity
 import edu.tasklynx.tasklynxmobile.ui.trabajo.TrabajoDetailActivity
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_ID_TAG
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_PASS_TAG
+import edu.tasklynx.tasklynxmobile.utils.Preferences
 import edu.tasklynx.tasklynxmobile.utils.TASK_FINISHED
 import edu.tasklynx.tasklynxmobile.utils.checkConnection
 import kotlinx.coroutines.flow.Flow
@@ -136,8 +136,14 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.opSpeciality -> {
                     filterListByPriority(vm.currentPendingTasks)
-                    //TODO ¿Manejar también el botón para eliminar el filtro?
-                    // Igualmente, al clickar en "Pending tasks" en la bottom navigation, se elimina el filtro de todas maneras.
+                    true
+                }
+
+                R.id.opLogout -> {
+                    logout()
+                    loginResult.launch(
+                        LoginActivity.navigate(this)
+                    )
                     true
                 }
 
@@ -186,7 +192,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAndSortPendingTasks() {
-        //TODO Aplicar un color a cada tarea según la prioridad
         if (checkConnection(this)) {
             lifecycleScope.launch {
                 vm.currentPendingTasks.collect { tasks ->
@@ -255,6 +260,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        // TODO Implementar lógica para cerrar sesión
+        Preferences(this).deletePreferences()
     }
 }

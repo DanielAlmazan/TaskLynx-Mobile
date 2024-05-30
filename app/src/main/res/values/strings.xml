@@ -28,4 +28,5 @@
 	<string name="txt_select_ending_date">Select ending date</string>
 	<string name="txt_set_number_hours">Set a number of hours</string>
 	<string name="txt_opt_logout">Logout</string>
+	<string name="txt_error_finalizing_task">Error finalizing task</string>
 </resources>

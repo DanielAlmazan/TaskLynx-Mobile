@@ -3,9 +3,10 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@drawable/tasklynx_gradient"
 	android:orientation="vertical"
-	android:padding="20dp"
 	
+	android:padding="20dp"
 	android:textAlignment="center">
 	
 	<ImageView
@@ -13,18 +14,21 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:contentDescription="@string/txt_logo"
-		app:srcCompat="@drawable/tasklynx_mobile_oval_logo" />
+		app:srcCompat="@drawable/tasklynx_mobile_empty_logo" />
 	
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/tilIdField"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		
 		android:layout_marginTop="20dp">
 		
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/tiedIdField"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:textColorHint="@color/white"
+			android:textColor="@color/white"
 			android:hint="@string/txt_id_field" />
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -32,7 +36,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="20dp">
-
+		
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/tiedPasswordField"
 			android:layout_width="match_parent"

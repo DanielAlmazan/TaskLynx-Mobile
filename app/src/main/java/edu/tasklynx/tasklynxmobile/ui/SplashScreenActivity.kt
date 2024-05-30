@@ -1,4 +1,4 @@
-package edu.tasklynx.tasklynxmobile.ui;
+package edu.tasklynx.tasklynxmobile.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +21,7 @@ class SplashScreenActivity : AppCompatActivity() {
              startActivity(intent)
              overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             this.finish()
-         }, 1500)
+         }, 1750)
      }
 
 }

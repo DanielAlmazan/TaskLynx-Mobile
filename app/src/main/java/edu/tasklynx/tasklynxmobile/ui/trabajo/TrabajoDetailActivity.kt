@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -79,6 +81,13 @@ class TrabajoDetailActivity : AppCompatActivity() {
             backToMainActivity()
         }
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.i(TAG, "ME PULSO YO - ${deleteTask}")
+                backToMainActivity()
+            }
+        })
+
         binding.tvTaskID.text = getString(R.string.txt_task_id, task.codTrabajo)
         binding.tvSpeciality.text = getString(R.string.txt_task_category, task.categoria)
         binding.tvDescription.text = getString(R.string.txt_task_description, task.descripcion)
@@ -92,9 +101,11 @@ class TrabajoDetailActivity : AppCompatActivity() {
             }
             2 -> {
                 binding.tvPriority.setBackgroundColor(getColor(R.color.priority_medium))
+                binding.tvPriority.setTextColor(getColor(R.color.white))
             }
             3 -> {
                 binding.tvPriority.setBackgroundColor(getColor(R.color.priority_low))
+                binding.tvPriority.setTextColor(binding.root.context.getColor(R.color.white))
             }
             4 -> {
                 binding.tvPriority.setBackgroundColor(getColor(R.color.priority_none))

@@ -10,15 +10,15 @@ import com.google.gson.annotations.SerializedName
         ForeignKey(
             entity = Trabajador::class,
             parentColumns = ["idTrabajador"],
-            childColumns = ["idTrabajador"],
-            onDelete = ForeignKey.CASCADE
+            childColumns = ["idTrabajador"]
         )
     ])
 data class TrabajoRoom(
     @SerializedName("categoria")
     val categoria: String,
+    @PrimaryKey
     @SerializedName("codTrabajo")
-    @PrimaryKey val codTrabajo: String,
+    val codTrabajo: String,
     @SerializedName("descripcion")
     val descripcion: String,
     @SerializedName("fecFin")

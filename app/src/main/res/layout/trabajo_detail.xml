@@ -9,14 +9,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		app:liftOnScroll="true">
-		
+
 		<com.google.android.material.appbar.MaterialToolbar
 			android:id="@+id/mToolbar"
 			android:layout_width="match_parent"
 			android:layout_height="?attr/actionBarSize"
 			android:background="?attr/colorPrimary"
 			app:title="@string/app_name"
-			app:titleCentered="true"
+			app:titleCentered="false"
 			app:titleTextColor="?attr/colorOnPrimary" />
 	</com.google.android.material.appbar.AppBarLayout>
 	
@@ -26,14 +26,14 @@
 		android:orientation="vertical"
 		android:padding="8dp"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
-		
+
 		<LinearLayout
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:padding="8dp"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior">
-			
+
 			<TextView
 				android:id="@+id/tvTaskID"
 				android:layout_width="match_parent"
@@ -42,7 +42,7 @@
 				android:text="@string/txt_task_id"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_id" />
-			
+
 			<TextView
 				android:id="@+id/tvSpeciality"
 				android:layout_width="match_parent"
@@ -50,7 +50,7 @@
 				android:text="@string/txt_task_category"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_category" />
-			
+
 			<TextView
 				android:id="@+id/tvDescription"
 				android:layout_width="match_parent"
@@ -58,7 +58,7 @@
 				android:text="@string/txt_task_description"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_description" />
-			
+
 			<TextView
 				android:id="@+id/tvStartingDate"
 				android:layout_width="match_parent"
@@ -66,7 +66,7 @@
 				android:text="@string/txt_task_starting_date"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_starting_date" />
-			
+
 			<TextView
 				android:id="@+id/tvEndingDate"
 				android:layout_width="match_parent"
@@ -74,16 +74,17 @@
 				android:text="@string/txt_task_ending_date"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_ending_date" />
-			
-			
+
+
 			<TextView
 				android:id="@+id/tvPriority"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:padding="4dp"
 				android:text="@string/txt_task_priority"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_priority" />
-			
+
 			<TextView
 				android:id="@+id/tvTime"
 				android:layout_width="match_parent"
@@ -91,7 +92,7 @@
 				android:text="@string/txt_task_time"
 				android:textAlignment="textStart"
 				tools:text="@string/txt_task_time" />
-		
+
 		</LinearLayout>
 		
 		

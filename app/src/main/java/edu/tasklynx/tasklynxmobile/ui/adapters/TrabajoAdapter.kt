@@ -29,9 +29,11 @@ class TrabajoAdapter (
                 }
                 2 -> {
                     binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_medium))
+                    binding.tvPriority.setTextColor(binding.root.context.getColor(R.color.white))
                 }
                 3 -> {
                     binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_low))
+                    binding.tvPriority.setTextColor(binding.root.context.getColor(R.color.white))
                 }
                 4 -> {
                     binding.tvPriority.setBackgroundColor(binding.root.context.getColor(R.color.priority_none))

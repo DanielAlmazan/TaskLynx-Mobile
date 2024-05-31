@@ -15,6 +15,7 @@ class Repository(private val ds: TaskLynxDataSource) {
         return flow {
             try {
                 val trabajoListResponse = ds.getPendingTasksByLoggedEmployee(id, password)
+                Log.i(TAG, "Fetch ID: ${id} - PASS: ${password}")
                 emit(trabajoListResponse.result)
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching tasks from the API: ${e.message}")

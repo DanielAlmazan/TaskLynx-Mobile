@@ -19,6 +19,15 @@ class LoginViewModel(
 
         return@runBlocking result
     }
+
+    fun changePassword(id: String, password: String) = runBlocking {
+        var result = false
+        repository.changePassword(id, password).catch {
+            Log.e("ERROR", "Error cambiando la contraseña")
+        }.collect { result = true }
+
+        return@runBlocking result
+    }
 }
 
 @Suppress("UNCHECKED_CAST")

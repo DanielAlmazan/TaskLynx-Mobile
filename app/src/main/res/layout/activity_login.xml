@@ -36,13 +36,13 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="20dp">
-		
+
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/tiedPasswordField"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/txt_password_field"
-			android:inputType="text" />
+			android:inputType="text|textPassword" />
 	</com.google.android.material.textfield.TextInputLayout>
 	
 	<Button

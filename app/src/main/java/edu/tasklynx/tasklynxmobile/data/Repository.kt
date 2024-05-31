@@ -35,6 +35,18 @@ class Repository(private val ds: TaskLynxDataSource) {
         }
     }
 
+    fun changePassword(id: String, password: String) : Flow<Boolean> {
+        return flow {
+            try {
+                val trabajoSingleResponse = ds.changePassword(id, password)
+                emit(trabajoSingleResponse.error)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error changing password from the API: ${e.message}")
+                throw e
+            }
+        }
+    }
+
     // Room
     suspend fun insertTask(task: TrabajoRoom) = ds.insertTask(task)
     suspend fun insertEmployee(employee: Trabajador) = ds.insertEmployee(employee)

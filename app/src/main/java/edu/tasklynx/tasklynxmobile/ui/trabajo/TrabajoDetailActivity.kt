@@ -105,13 +105,13 @@ class TrabajoDetailActivity : AppCompatActivity() {
         if (task.fecFin.isNullOrBlank()) {
             binding.tvEndingDate.visibility = View.INVISIBLE
         } else {
-            binding.tvEndingDate.text = task.fecFin
+            binding.tvEndingDate.text = getString(R.string.txt_task_ending_date, task.fecFin)
         }
 
         if (task.tiempo == null) {
             binding.tvTime.visibility = View.INVISIBLE
         } else {
-            binding.tvTime.text = task.tiempo.toString()
+            binding.tvTime.text = getString(R.string.txt_task_time, task.tiempo.toString())
         }
 
         if (task.tiempo != null && !task.fecFin.isNullOrBlank()) {
@@ -151,6 +151,7 @@ class TrabajoDetailActivity : AppCompatActivity() {
 
         val dialog = MaterialAlertDialogBuilder(this@TrabajoDetailActivity).apply {
             setView(dialogView.root)
+            setTitle(getString(R.string.txt_modal_finish_task))
 
             setPositiveButton(android.R.string.ok, null)
 
@@ -177,9 +178,6 @@ class TrabajoDetailActivity : AppCompatActivity() {
 
                         Log.i(TAG, "time: ${timeSpent} - date: ${formattedDate}")
 
-                        task.fecFin = formattedDate
-                        task.tiempo = timeSpent
-
                         val taskFinished = vm.finishTask(task.codTrabajo, formattedDate, timeSpent)
                         if (taskFinished != null) {
                             Log.i(TAG, "Trabajo finalizado ${taskFinished.codTrabajo}")
@@ -191,8 +189,8 @@ class TrabajoDetailActivity : AppCompatActivity() {
                                 vm.insertTask(taskFinished)
                             }
 
-                            binding.tvTime.text = taskFinished.tiempo.toString()
-                            binding.tvEndingDate.text = taskFinished.fecFin
+                            binding.tvTime.text = getString(R.string.txt_task_time, taskFinished.tiempo.toString())
+                            binding.tvEndingDate.text = getString(R.string.txt_task_ending_date, taskFinished.fecFin)
                             binding.tvTime.visibility = View.VISIBLE
                             binding.tvEndingDate.visibility = View.VISIBLE
                             binding.finishBtn.visibility = View.INVISIBLE

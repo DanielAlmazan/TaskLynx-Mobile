@@ -17,9 +17,9 @@ class TrabajoAdapter (
         private val binding = TrabajoItemBinding.bind(view)
 
         fun bind (task: Trabajo) {
-            binding.tvTaskID.text = task.codTrabajo
-            binding.tvDescription.text = task.descripcion
-            binding.tvStartingDate.text = task.fecIni
+            binding.tvTaskID.text = binding.root.context.getString(R.string.txt_task_id, task.codTrabajo)
+            binding.tvDescription.text = binding.root.context.getString(R.string.txt_task_description, task.descripcion)
+            binding.tvStartingDate.text = binding.root.context.getString(R.string.txt_task_starting_date, task.fecIni)
             binding.tvPriority.text = binding.root.context.getString(R.string.txt_task_priority, task.prioridad.toString())
 
             when (task.prioridad) {
@@ -42,7 +42,7 @@ class TrabajoAdapter (
             if(task.fecFin.isNullOrBlank()) {
                 binding.tvEndingDate.visibility = View.INVISIBLE
             } else {
-                binding.tvEndingDate.text = task.fecFin
+                binding.tvEndingDate.text = binding.root.context.getString(R.string.txt_task_ending_date, task.fecFin)
             }
 
             binding.root.setOnClickListener {

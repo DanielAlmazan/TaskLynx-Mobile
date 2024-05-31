@@ -6,9 +6,9 @@
 	<!-- Login -->
 	<string name="txt_email_field">email</string>
 	<string name="txt_id_field">ID</string>
-	<string name="txt_password_field">password</string>
-	<string name="txt_send_credentials">password</string>
-	
+	<string name="txt_password_field">Password</string>
+	<string name="txt_password_confirm">Confirm password</string>
+
 	<!-- Task -->
 	<string name="txt_task_id">Task ID: %s</string>
 	<string name="txt_task_category">Category: %s</string>
@@ -24,12 +24,16 @@
 	<string name="txt_optTop_sort">Sort tasks by priority</string>
 	<string name="txt_optTop_filter">Filter tasks by speciality</string>
 	<string name="txt_noConnection">There is no internet connection</string>
-  <string name="txt_finish_task">Finish task</string>
+  	<string name="txt_finish_task">Finish task</string>
 	<string name="txt_insert_priority">Insert the priority to filter the tasks</string>
 	<string name="txt_select_ending_date">Select ending date</string>
 	<string name="txt_set_number_hours">Set a number of hours</string>
 	<string name="txt_opt_logout">Logout</string>
-  <string name="btn_DatePicker">Select a date</string>
+	<string name="txt_modal_finish_task">Finish task</string>
+	<string name="txt_modal_change_password">Change your password</string>
+  	<string name="btn_DatePicker">Select a date</string>
 	<string name="txt_error_modal">You must set every field</string>
 	<string name="txt_error_finalizing_task">Error finalizing task</string>
+	<string name="txt_error_changing_pasword">Error changing password</string>
+    <string name="txt_error_password">Both password must be equal</string>
 </resources>

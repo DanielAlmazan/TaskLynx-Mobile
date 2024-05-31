@@ -18,6 +18,8 @@ class TaskLynxDataSource(private val db: TrabajoDao) {
         return api.finishTask(id, finishDate, timeSpent)
     }
 
+    suspend fun changePassword(id: String, password: String) = api.changePassword(id, password)
+
     //Room Actions
     suspend fun insertTask(task: TrabajoRoom) = db.insertTask(task)
     suspend fun insertEmployee(employee: Trabajador) = db.insertEmployee(employee)

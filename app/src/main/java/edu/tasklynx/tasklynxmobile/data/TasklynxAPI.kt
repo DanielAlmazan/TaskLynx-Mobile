@@ -36,5 +36,12 @@ class TasklynxAPI {
             @Query("fec_fin") finishDate: String,
             @Query("tiempo") timeSpend: Double
         ): TrabajoSingleResponse
+
+        // Change password of an employee
+        @PUT("trabajadores/{id}/password/{password}")
+        suspend fun changePassword(
+            @Path("id") id: String,
+            @Path("password") password: String,
+        ): TrabajoSingleResponse
     }
 }

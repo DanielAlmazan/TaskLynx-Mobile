@@ -1,26 +1,40 @@
 package edu.tasklynx.tasklynxmobile.ui.login
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import edu.tasklynx.tasklynxmobile.R
 import edu.tasklynx.tasklynxmobile.TaskLynxApplication
 import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.data.Repository
 import edu.tasklynx.tasklynxmobile.databinding.ActivityLoginBinding
+import edu.tasklynx.tasklynxmobile.databinding.ChangePasswordLayoutBinding
+import edu.tasklynx.tasklynxmobile.databinding.FinishTaskLayoutBinding
 import edu.tasklynx.tasklynxmobile.ui.main.MainActivity
 import edu.tasklynx.tasklynxmobile.ui.main.MainViewModel
 import edu.tasklynx.tasklynxmobile.ui.main.MainViewModelFactory
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_ID_TAG
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_PASS_TAG
+import edu.tasklynx.tasklynxmobile.utils.checkConnection
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private val DEFAUL_PASSWORD = "tasklynx2024"
 
     companion object {
         /**
@@ -61,13 +75,64 @@ class LoginActivity : AppCompatActivity() {
         if (!id.isNullOrBlank() && !password.isNullOrBlank()) {
             Log.i(LoginActivity::class.java.simpleName, "ID: $id - PASS: $password")
             if(vm.checkLogin(id.toString(), password.toString())) {
-                backToMainActivity(id.toString(), password.toString())
+                if(password.toString() == DEFAUL_PASSWORD) {
+                    showModal(id.toString())
+                } else
+                    backToMainActivity(id.toString(), password.toString())
             } else {
                 Toast.makeText(this, "Incorrect credentials", Toast.LENGTH_SHORT).show()
             }
         } else {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showModal(id: String) {
+        val dialogView = ChangePasswordLayoutBinding.inflate(layoutInflater)
+
+        val dialog = MaterialAlertDialogBuilder(this@LoginActivity).apply {
+            setView(dialogView.root)
+            setTitle(getString(R.string.txt_modal_change_password))
+
+            setPositiveButton(android.R.string.ok, null)
+
+            setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+        }.create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val pass = dialogView.tiePassword.text
+                val passConfirm = dialogView.tiePassConfirm.text
+                if (pass.isNullOrBlank() || passConfirm.isNullOrEmpty() || pass.toString() != passConfirm.toString()) {
+                    dialogView.txtError.visibility = View.VISIBLE
+                } else {
+                    dialogView.txtError.visibility = View.INVISIBLE
+                    if (checkConnection(this@LoginActivity)) {
+
+                        val passChanged = vm.changePassword(id, pass.toString())
+                        if (passChanged) {
+                            backToMainActivity(id, pass.toString())
+                        } else {
+                            Toast.makeText(
+                                this@LoginActivity,
+                                getString(R.string.txt_error_changing_pasword),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        dialog.dismiss()
+                    } else
+                        Toast.makeText(
+                            this@LoginActivity,
+                            getString(R.string.txt_noConnection),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                }
+            }
+        }
+
+        dialog.show()
     }
 
     /**

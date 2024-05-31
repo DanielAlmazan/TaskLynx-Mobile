@@ -145,8 +145,8 @@
 	<color name="md_theme_surfaceContainer_highContrast">#E9EFF0</color>
 	<color name="md_theme_surfaceContainerHigh_highContrast">#E3E9EA</color>
 	<color name="md_theme_surfaceContainerHighest_highContrast">#DEE4E4</color>
-	<color name="priority_high">#FF0000</color>
-	<color name="priority_medium">#FFA500</color>
-	<color name="priority_low">#AFC100</color>
-	<color name="priority_none">#008000</color>
+	<color name="priority_high">#E81640</color>
+	<color name="priority_medium">#F4850F</color>
+	<color name="priority_low">#1AA128</color>
+	<color name="priority_none">#1E8AA6</color>
 </resources>

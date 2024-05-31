@@ -31,9 +31,18 @@
 	<string name="txt_opt_logout">Logout</string>
 	<string name="txt_modal_finish_task">Finish task</string>
 	<string name="txt_modal_change_password">Change your password</string>
+	<string name="txt_modal_select_priority">Insert the priority to filter the tasks</string>
   	<string name="btn_DatePicker">Select a date</string>
 	<string name="txt_error_modal">You must set every field</string>
 	<string name="txt_error_finalizing_task">Error finalizing task</string>
 	<string name="txt_error_changing_pasword">Error changing password</string>
     <string name="txt_error_password">Both password must be equal</string>
+	<string name="txt_no_elemets">There are no tasks</string>
+
+	<array name="array_priorities">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+	</array>
 </resources>

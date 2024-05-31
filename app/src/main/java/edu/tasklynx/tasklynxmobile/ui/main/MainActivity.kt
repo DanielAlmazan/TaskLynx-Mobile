@@ -1,8 +1,11 @@
 package edu.tasklynx.tasklynxmobile.ui.main
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,12 +27,15 @@ import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_PASS_TAG
 import edu.tasklynx.tasklynxmobile.utils.Preferences
 import edu.tasklynx.tasklynxmobile.utils.TASK_FINISHED
 import edu.tasklynx.tasklynxmobile.utils.checkConnection
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val TAG = MainActivity::class.java.simpleName
 
     var employeeId: String = ""
     var employeePassword: String = ""
@@ -46,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     private val vm: MainViewModel by viewModels {
         val db = (application as TaskLynxApplication).tasksDB
         val ds = TaskLynxDataSource(db.trabajoDao())
-        MainViewModelFactory(Repository(ds), employeeId, employeePassword)
+        MainViewModelFactory(Repository(ds))
     }
 
     private val adapterTask by lazy {
@@ -72,6 +78,7 @@ class MainActivity : AppCompatActivity() {
             employeePassword = data.getStringExtra(EMPLOYEE_PASS_TAG)!!
             TaskLynxApplication.preferences.employeeId = employeeId
             TaskLynxApplication.preferences.employeePassword = employeePassword
+            Log.i(TAG, "ID: ${employeeId} - PASS: ${employeePassword}")
             getAndSortPendingTasks()
         }
     }
@@ -121,10 +128,9 @@ class MainActivity : AppCompatActivity() {
 
         viewingPending = true
 
-        binding.mToolbar.setOnMenuItemClickListener() { item ->
+        binding.mToolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.opSort -> {
-                    adapter.submitList(emptyList())
                     ascendingOrder = !ascendingOrder
                     if (viewingPending) {
                         getAndSortPendingTasks()
@@ -135,7 +141,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.opSpeciality -> {
-                    filterListByPriority(vm.currentPendingTasks)
+                    filterListByPriority()
                     true
                 }
 
@@ -154,14 +160,12 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.opPending -> {
-                    adapter.submitList(emptyList())
                     viewingPending = true
                     getAndSortPendingTasks()
                     true
                 }
 
                 R.id.opCompleted -> {
-                    adapter.submitList(emptyList())
                     viewingPending = false
                     getAndSortCompletedTasks()
                     true
@@ -174,7 +178,6 @@ class MainActivity : AppCompatActivity() {
         binding.swipeRefresh.setOnRefreshListener {
             when {
                 checkConnection(this) -> {
-                    adapter.submitList(emptyList())
                     if (viewingPending) {
                         getAndSortPendingTasks()
                     } else {
@@ -194,13 +197,15 @@ class MainActivity : AppCompatActivity() {
     private fun getAndSortPendingTasks() {
         if (checkConnection(this)) {
             lifecycleScope.launch {
-                vm.currentPendingTasks.collect { tasks ->
-                    tasksList = if (ascendingOrder)
-                        tasks.sortedBy { it.prioridad }.toMutableList()
-                    else tasks.sortedByDescending { it.prioridad }.toMutableList()
+                val list = vm.fetchPendingTasks(employeeId, employeePassword)
+                tasksList = if (ascendingOrder)
+                    list.sortedBy { it.prioridad }.toMutableList()
+                else list.sortedByDescending { it.prioridad }.toMutableList()
 
-                    adapter.submitList(tasksList)
-                }
+                binding.tvNoElements.visibility = if (tasksList.isEmpty()) View.VISIBLE
+                    else View.INVISIBLE
+                adapter.submitList(emptyList())
+                adapter.submitList(tasksList)
             }
         } else {
             Toast.makeText(this, getString(R.string.txt_noConnection), Toast.LENGTH_SHORT).show()
@@ -215,9 +220,15 @@ class MainActivity : AppCompatActivity() {
                         tasks.sortedBy { it.prioridad }.toMutableList()
                     else tasks.sortedByDescending { it.prioridad }.toMutableList()
 
-                    adapter.submitList(tasksList.filter {
+                    tasksList = tasksList.filter {
                         it.idTrabajador!!.idTrabajador == employeeId
-                    })
+                    }.toMutableList()
+
+                    binding.tvNoElements.visibility = if (tasksList.isEmpty()) View.VISIBLE
+                        else View.INVISIBLE
+
+                    adapter.submitList(emptyList())
+                    adapter.submitList(tasksList)
                 }
             }
         } else {
@@ -225,38 +236,56 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterListByPriority(flow: Flow<List<Trabajo>>) {
-        if (checkConnection(this)) {
-            val dialogView = EditText(this@MainActivity)
-            val dialog = MaterialAlertDialogBuilder(this@MainActivity)
-                .setTitle("Insert the priority to filter the tasks")
-                .setView(dialogView)
-                .setPositiveButton("OK") { dialog, _ ->
-                    val priorityToFilter = dialogView.text.toString().toInt()
-                    dialog.dismiss()
-                    priority = priorityToFilter
+    private fun filterListByPriority() {
+        MaterialAlertDialogBuilder(this@MainActivity).apply {
+            setTitle(getString(R.string.txt_modal_select_priority))
 
-                    adapter.submitList(emptyList())
+            var selectedPos = -1
+            val prioritiesArray = resources.getIntArray(R.array.array_priorities).toTypedArray()
 
-                    lifecycleScope.launch {
-                        flow.catch {
-                            Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
-                        }.collect { trabajos ->
-                            tasksList =
-                                trabajos.filter { t -> t.prioridad == priority }.toMutableList()
+            setSingleChoiceItems(prioritiesArray.map { p -> p.toString() }.toTypedArray(), -1) { _, which ->
+                selectedPos = which
+            }
+
+            setPositiveButton(android.R.string.ok) { dialog, _ ->
+                if (selectedPos != -1) {
+                    val priority = prioritiesArray[selectedPos]
+
+                    if (checkConnection(this@MainActivity)) {
+                        lifecycleScope.launch {
+                            runBlocking {
+                                if(viewingPending)
+                                   tasksList = vm.fetchPendingTasks(employeeId, employeePassword).toMutableList()
+                                else
+                                    vm.currentCompletedTasks.collect{
+                                        tasksList = it.filter { t ->
+                                            t.idTrabajador!!.idTrabajador == employeeId
+                                        }.toMutableList()
+                                    }
+                            }
+                            tasksList = tasksList.filter { t -> t.prioridad == priority }.toMutableList()
+
+                            binding.tvNoElements.visibility = if (tasksList.isEmpty()) View.VISIBLE
+                            else View.INVISIBLE
+
+                            adapter.submitList(emptyList())
                             adapter.submitList(tasksList)
                         }
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            getString(R.string.txt_noConnection),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .create()
+                dialog.dismiss()
+            }
 
-            dialog.show()
-        } else {
-            Toast.makeText(this, getString(R.string.txt_noConnection), Toast.LENGTH_SHORT).show()
-        }
+            setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+        }.show()
     }
 
     private fun logout() {

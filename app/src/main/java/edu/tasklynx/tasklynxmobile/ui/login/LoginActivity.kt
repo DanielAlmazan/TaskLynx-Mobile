@@ -1,36 +1,23 @@
 package edu.tasklynx.tasklynxmobile.ui.login
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Intent
-import android.icu.util.Calendar
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import edu.tasklynx.tasklynxmobile.R
 import edu.tasklynx.tasklynxmobile.TaskLynxApplication
-import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.data.Repository
+import edu.tasklynx.tasklynxmobile.data.TaskLynxDataSource
 import edu.tasklynx.tasklynxmobile.databinding.ActivityLoginBinding
 import edu.tasklynx.tasklynxmobile.databinding.ChangePasswordLayoutBinding
-import edu.tasklynx.tasklynxmobile.databinding.FinishTaskLayoutBinding
-import edu.tasklynx.tasklynxmobile.ui.main.MainActivity
-import edu.tasklynx.tasklynxmobile.ui.main.MainViewModel
-import edu.tasklynx.tasklynxmobile.ui.main.MainViewModelFactory
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_ID_TAG
 import edu.tasklynx.tasklynxmobile.utils.EMPLOYEE_PASS_TAG
 import edu.tasklynx.tasklynxmobile.utils.checkConnection
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -73,7 +60,6 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.tiedPasswordField.text
 
         if (!id.isNullOrBlank() && !password.isNullOrBlank()) {
-            Log.i(LoginActivity::class.java.simpleName, "ID: $id - PASS: $password")
             if(vm.checkLogin(id.toString(), password.toString())) {
                 if(password.toString() == DEFAUL_PASSWORD) {
                     showModal(id.toString())

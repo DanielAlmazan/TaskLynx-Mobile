@@ -29,14 +29,14 @@ class TrabajoDetailViewModel(
 
     fun insertTask(task: Trabajo) {
         val taskRoom = TrabajoRoom(
-            task.categoria,
-            task.codTrabajo,
-            task.descripcion,
-            task.fecFin,
-            task.fecIni,
-            task.idTrabajador?.idTrabajador,
-            task.prioridad,
-            task.tiempo
+            categoria = task.categoria,
+            codTrabajo = task.codTrabajo,
+            descripcion = task.descripcion,
+            fecFin = task.fecFin,
+            fecIni = task.fecIni,
+            idTrabajador = task.idTrabajador?.idTrabajador,
+            prioridad = task.prioridad,
+            tiempo = task.tiempo
         )
 
         viewModelScope.launch {
